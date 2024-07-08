@@ -1,5 +1,5 @@
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseConnection {
@@ -13,7 +13,7 @@ class DatabaseConnection {
 
   Future<void> _createDatabase(Database database, int version) async {
     String sql =
-        "CREATE TABLE user (id INTERGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, telepon TEXT, deskripsi TEXT);";
+        "CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, telepon TEXT, deskripsi TEXT);";
     await database.execute(sql);
   }
 }

@@ -1,6 +1,3 @@
-import 'dart:js_interop';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../model/User.dart';
@@ -83,13 +80,13 @@ class _AdduserState extends State<Adduser> {
                               ? _validateName = true
                               : _validateName = false;
                           _userTeleponController.text.isEmpty
-                              ? _validateTelepon
+                              ? _validateTelepon = true
                               : _validateTelepon = false;
                           _userDeskripsiController.text.isEmpty
-                              ? _validateDeskripsi
+                              ? _validateDeskripsi = true
                               : _validateDeskripsi = false;
                         });
-                        if (_validateName = false &&
+                        if (_validateName == false &&
                             _validateTelepon == false &&
                             _validateDeskripsi == false) {
                           var _user = User();

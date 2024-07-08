@@ -45,8 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
         var userModel = User();
         userModel.id = user['id'];
         userModel.name = user['name'];
-        userModel.telepon = user['contact'];
-        userModel.deskripsi = user['description'];
+        userModel.telepon = user['telepon'];
+        userModel.deskripsi = user['deskripsi'];
         _userList.add(userModel);
       });
     });
