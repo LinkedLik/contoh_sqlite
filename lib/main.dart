@@ -1,41 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:testprogram/screens/AddUser.dart';
 import 'package:testprogram/screens/EditUser.dart';
 import 'package:testprogram/screens/ViewUsers.dart';
-import 'package:testprogram/services/Userservice.dart';
+
 import 'model/User.dart';
+import 'services/Userservice.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.purple),
-      home: Tampilan(),
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+      ),
+      home: const MyHomePage(),
     );
   }
 }
 
-class Tampilan extends StatefulWidget {
-  const Tampilan({super.key});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<Tampilan> createState() => _TampilanState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _TampilanState extends State<Tampilan> {
+class _MyHomePageState extends State<MyHomePage> {
   late List<User> _userList = <User>[];
   final _userService = Userservice();
 
@@ -47,13 +45,14 @@ class _TampilanState extends State<Tampilan> {
         var userModel = User();
         userModel.id = user['id'];
         userModel.name = user['name'];
-        userModel.telepon = user['telepon'];
-        userModel.deskripsi = user['deskripsi'];
+        userModel.telepon = user['contact'];
+        userModel.deskripsi = user['description'];
         _userList.add(userModel);
       });
     });
   }
 
+  @override
   void initState() {
     getAllUserDetails();
     super.initState();
@@ -72,23 +71,26 @@ class _TampilanState extends State<Tampilan> {
         context: context,
         builder: (param) {
           return AlertDialog(
-            title: Text('Yakin mau dihapus?'),
-            actions: <Widget>[
+            title: const Text(
+              'Are You Sure to Delete',
+              style: TextStyle(color: Colors.teal, fontSize: 20),
+            ),
+            actions: [
               TextButton(
                   onPressed: () async {
                     var result = await _userService.deleteUser(userId);
                     if (result != null) {
                       Navigator.pop(context);
                       getAllUserDetails();
-                      _showSuccessSnackBar('User telah dihapus');
+                      _showSuccessSnackBar('User Detail Deleted Success');
                     }
                   },
-                  child: Text('Hapus')),
+                  child: const Text('Delete')),
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Tutup'))
+                  child: const Text('Close'))
             ],
           );
         });
@@ -98,7 +100,7 @@ class _TampilanState extends State<Tampilan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CRUD pada SQLite'),
+        title: const Text("SQLite CRUD"),
       ),
       body: ListView.builder(
           itemCount: _userList.length,
@@ -109,35 +111,44 @@ class _TampilanState extends State<Tampilan> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              Viewusers(user: _userList[index])));
+                          builder: (context) => Viewusers(
+                                user: _userList[index],
+                              )));
                 },
-                leading: Icon(Icons.person),
+                leading: const Icon(Icons.person),
                 title: Text(_userList[index].name ?? ''),
                 subtitle: Text(_userList[index].telepon ?? ''),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                  children: [
                     IconButton(
                         onPressed: () {
                           Navigator.push(
-                              (context),
+                              context,
                               MaterialPageRoute(
                                   builder: (context) => Edituser(
                                         user: _userList[index],
                                       ))).then((data) {
                             if (data != null) {
                               getAllUserDetails();
-                              _showSuccessSnackBar('Data Berhasil Terupdate');
+                              _showSuccessSnackBar(
+                                  'User Detail Updated Success');
                             }
                           });
+                          ;
                         },
-                        icon: Icon(Icons.edit)),
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.teal,
+                        )),
                     IconButton(
                         onPressed: () {
                           _deleteFormDialog(context, _userList[index].id);
                         },
-                        icon: Icon(Icons.delete)),
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ))
                   ],
                 ),
               ),
@@ -145,16 +156,16 @@ class _TampilanState extends State<Tampilan> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Adduser()))
+          Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Adduser()))
               .then((data) {
             if (data != null) {
               getAllUserDetails();
-              _showSuccessSnackBar('Detail user berhasil ditambah');
+              _showSuccessSnackBar('User Detail Added Success');
             }
           });
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
